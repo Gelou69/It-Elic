@@ -1,0 +1,73 @@
+/* Custom CSS Variables for Shopee Colors */
+:root {
+  --shopee-orange: #EE4D2D;
+  --shopee-light-bg: #F5F5F5;
+  --shopee-navy: #113366;
+}
+
+/* Custom CSS Classes (Tailwind patterns) */
+
+/* Base style for the custom button */
+.shopee-button-base {
+  @apply w-full py-2 rounded-lg font-bold transition-all duration-200 shadow-md;
+  /* Use transform hover:scale-[1.01] for the hover effect */
+  transform: scale(1); /* Initial state for transition */
+}
+
+.shopee-button-base:hover:not(:disabled) {
+    transform: scale(1.01);
+}
+
+/* Primary Button (Orange) */
+.shopee-button-primary {
+  @apply text-white;
+  background-color: var(--shopee-orange);
+}
+
+/* Secondary Button (White/Bordered) */
+.shopee-button-secondary {
+  @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50;
+  color: var(--shopee-navy); /* Use navy for text color */
+}
+
+/* Disabled State */
+.shopee-button-disabled {
+  @apply opacity-50 cursor-not-allowed;
+  transform: none !important; /* Override hover scale */
+  /* Ensure disabled primary keeps its color but with opacity */
+  background-color: var(--shopee-orange) !important;
+  color: white !important;
+}
+
+/* Shared utility for color applications */
+.text-shopee-orange {
+  color: var(--shopee-orange);
+}
+
+.bg-shopee-light {
+  background-color: var(--shopee-light-bg);
+}
+
+.text-shopee-navy {
+  color: var(--shopee-navy);
+}
+
+/* Tracking Map Placeholder Styling */
+.tracking-map-banner {
+    background-color: var(--shopee-navy);
+}
+
+.tracking-map-banner.shipped {
+    background-color: var(--shopee-orange);
+}
+
+/* Mobile Nav Styling */
+.nav-item-active {
+  color: var(--shopee-orange);
+  opacity: 100%;
+}
+
+.nav-item-inactive {
+  color: var(--shopee-orange);
+  opacity: 50%;
+}
