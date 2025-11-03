@@ -1,4 +1,4 @@
-/* Custom CSS Variables for Shopee Colors */
+@import "tailwindcss";
 :root {
   --shopee-orange: #EE4D2D;
   --shopee-light-bg: #F5F5F5;
@@ -9,7 +9,7 @@
 
 /* Base style for the custom button */
 .shopee-button-base {
-  @apply w-full py-2 rounded-lg font-bold transition-all duration-200 shadow-md;
+
   /* Use transform hover:scale-[1.01] for the hover effect */
   transform: scale(1); /* Initial state for transition */
 }
@@ -20,19 +20,19 @@
 
 /* Primary Button (Orange) */
 .shopee-button-primary {
-  @apply text-white;
+
   background-color: var(--shopee-orange);
 }
 
 /* Secondary Button (White/Bordered) */
 .shopee-button-secondary {
-  @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50;
+
   color: var(--shopee-navy); /* Use navy for text color */
 }
 
 /* Disabled State */
 .shopee-button-disabled {
-  @apply opacity-50 cursor-not-allowed;
+
   transform: none !important; /* Override hover scale */
   /* Ensure disabled primary keeps its color but with opacity */
   background-color: var(--shopee-orange) !important;
@@ -51,12 +51,25 @@
 .text-shopee-navy {
   color: var(--shopee-navy);
 }
-
+.h-screen.flex.flex-col.items-center.w-full {
+    width: 1745px;
+}
 /* Tracking Map Placeholder Styling */
 .tracking-map-banner {
     background-color: var(--shopee-navy);
 }
-
+input.w-full.p-3.border.border-gray-300.rounded-lg.focus\:ring-2.focus\:ring-offset-0.transition.duration-150.ease-in-out.input-focus-shopee {
+    color: black;
+}
+span.font-bold.w-5.text-center {
+    color: black;
+}
+textarea.w-full.p-3.border.border-gray-300.rounded-lg.focus\:ring-2.focus\:ring-offset-0.transition.duration-150.ease-in-out.input-focus-shopee.resize-none {
+    color: black;
+}
+select.w-full.p-3.border.border-gray-300.rounded-lg.appearance-none.bg-white.font-semibold.focus\:ring-2.focus\:ring-offset-0.input-focus-shopee {
+    color: black;
+}
 .tracking-map-banner.shipped {
     background-color: var(--shopee-orange);
 }
