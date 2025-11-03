@@ -45,11 +45,11 @@ export const ORDER_STATUSES = [
 export const Loading = () => (
   <div className="flex items-center justify-center p-8 h-full w-full">
     <div className="animate-spin rounded-full h-10 w-10 border-4 border-t-transparent" style={{borderColor: ORANGE}}></div>
-    <span className="ml-4 text-lg font-medium" style={{color: NAVY}}>Loading Shopee Mall...</span>
+    <span className="ml-4 text-lg font-medium" style={{color: NAVY}}>Loading Store Mall...</span>
   </div>
 );
 
-// 2. Shopee Button (Stylistically Enhanced)
+// 2. Store Button (Stylistically Enhanced)
 export const ShopeeButton = ({ children, onClick, className = '', disabled = false, variant = 'primary' }) => {
   const baseStyle = 'w-full py-3 rounded-md font-bold text-base transition-all duration-300 shadow-lg';
   let variantStyle = '';
@@ -197,7 +197,7 @@ const AuthPage = ({ supabase, onSuccess }) => {
     <div className="flex justify-center items-center h-full w-full py-10"> 
         <div className="p-6 md:p-10 bg-white rounded-2xl shadow-2xl mx-4 w-full max-w-md">
             <h2 className="text-3xl font-extrabold mb-8 text-center" style={{ color: ORANGE }}>
-                {isLogin ? 'Welcome Back to Shopee!' : 'Join the Shopee Family'}
+                {isLogin ? 'Welcome Back to Shopee!' : 'Join the Store Family'}
             </h2>
             
             <div className='space-y-4'>
@@ -864,9 +864,9 @@ const OrderTracking = ({ order, setPage, user }) => {
       <div className="p-4 bg-white rounded-xl shadow-md text-sm">
         <h3 className="font-bold text-lg mb-2" style={{ color: NAVY }}><span className='mr-1'>🏠</span>Delivery Details</h3>
         
-        <p className='text-gray-700'>**Recipient:** {currentOrder.contact_name}</p>
-        <p className='text-gray-700'>**Phone:** {currentOrder.contact_phone}</p>
-        <p className="text-gray-600 mt-1">**Address:** {currentOrder.shipping_address}</p>
+        <p className='text-gray-700'>Recipient: {currentOrder.contact_name}</p>
+        <p className='text-gray-700'>Phone: {currentOrder.contact_phone}</p>
+        <p className="text-gray-600 mt-1">Address: {currentOrder.shipping_address}</p>
       </div>
 
     </div>
@@ -1128,7 +1128,7 @@ const App = () => {
       
       <header className="w-full shadow-lg p-3 z-20 sticky top-0" style={{ backgroundColor: ORANGE }}>
         <div className="flex justify-between items-center w-full max-w-3xl mx-auto"> 
-          <h1 className="text-xl font-black text-white">SHOPEE <span className='text-sm font-light italic'>Mall</span></h1>
+          <h1 className="text-xl font-black text-white">STORE <span className='text-sm font-light italic'>Mall</span></h1>
           
           {user && (
             <div className="flex items-center text-white text-sm">
