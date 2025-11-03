@@ -1,80 +1,138 @@
 @import "tailwindcss";
+
+/* === Root Theme Colors === */
 :root {
   --shopee-orange: #EE4D2D;
   --shopee-light-bg: #F5F5F5;
   --shopee-navy: #113366;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom CSS Classes (Tailwind patterns) */
+/* === General Element Styles === */
+a {
+  font-weight: 500;
+  color: #eeeeee;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
 
-/* Base style for the custom button */
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--shopee-light-bg);
+  color: var(--shopee-navy);
+  overflow-x: hidden;
+}
+
+h1 {
+  font-size: 2rem;
+  line-height: 1.2;
+}
+@media (min-width: 768px) {
+  h1 {
+    font-size: 3.2em;
+  }
+}
+
+/* === Button Base === */
 .shopee-button-base {
-
-  /* Use transform hover:scale-[1.01] for the hover effect */
-  transform: scale(1); /* Initial state for transition */
+  transform: scale(1);
+  transition: transform 0.15s ease-in-out;
 }
 
 .shopee-button-base:hover:not(:disabled) {
-    transform: scale(1.01);
+  transform: scale(1.01);
 }
 
-/* Primary Button (Orange) */
 .shopee-button-primary {
-
   background-color: var(--shopee-orange);
+  color: white;
 }
 
-/* Secondary Button (White/Bordered) */
 .shopee-button-secondary {
-
-  color: var(--shopee-navy); /* Use navy for text color */
+  background-color: white;
+  color: var(--shopee-navy);
+  border: 1px solid var(--shopee-orange);
 }
 
-/* Disabled State */
 .shopee-button-disabled {
-
-  transform: none !important; /* Override hover scale */
-  /* Ensure disabled primary keeps its color but with opacity */
+  transform: none !important;
   background-color: var(--shopee-orange) !important;
   color: white !important;
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-/* Shared utility for color applications */
+/* === Shopee Utility Colors === */
 .text-shopee-orange {
   color: var(--shopee-orange);
 }
-
 .bg-shopee-light {
   background-color: var(--shopee-light-bg);
 }
-
 .text-shopee-navy {
   color: var(--shopee-navy);
 }
+
+/* === Responsive Container === */
 .h-screen.flex.flex-col.items-center.w-full {
-    width: 1745px;
-}
-/* Tracking Map Placeholder Styling */
-.tracking-map-banner {
-    background-color: var(--shopee-navy);
-}
-input.w-full.p-3.border.border-gray-300.rounded-lg.focus\:ring-2.focus\:ring-offset-0.transition.duration-150.ease-in-out.input-focus-shopee {
-    color: black;
-}
-span.font-bold.w-5.text-center {
-    color: black;
-}
-textarea.w-full.p-3.border.border-gray-300.rounded-lg.focus\:ring-2.focus\:ring-offset-0.transition.duration-150.ease-in-out.input-focus-shopee.resize-none {
-    color: black;
-}
-select.w-full.p-3.border.border-gray-300.rounded-lg.appearance-none.bg-white.font-semibold.focus\:ring-2.focus\:ring-offset-0.input-focus-shopee {
-    color: black;
-}
-.tracking-map-banner.shipped {
-    background-color: var(--shopee-orange);
+  width: 100%;
+  max-width: 1745px;
+  padding: 1rem;
 }
 
-/* Mobile Nav Styling */
+/* === Tracking Map Banner === */
+.tracking-map-banner {
+  background-color: var(--shopee-navy);
+  width: 100%;
+  text-align: center;
+  color: white;
+  padding: 1rem;
+}
+
+.tracking-map-banner.shipped {
+  background-color: var(--shopee-orange);
+}
+
+/* === Form Inputs === */
+input.w-full,
+textarea.w-full,
+select.w-full {
+  color: black;
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease-in-out;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  ring: 2px var(--shopee-orange);
+  border-color: var(--shopee-orange);
+}
+
+textarea {
+  resize: none;
+}
+
+/* === Navigation Items === */
 .nav-item-active {
   color: var(--shopee-orange);
   opacity: 100%;
@@ -83,4 +141,56 @@ select.w-full.p-3.border.border-gray-300.rounded-lg.appearance-none.bg-white.fon
 .nav-item-inactive {
   color: var(--shopee-orange);
   opacity: 50%;
+}
+
+/* === Buttons === */
+button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s, background-color 0.25s;
+    color: white;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* === Responsive Adjustments === */
+
+/* Mobile-first defaults */
+.container {
+  width: 100%;
+  padding: 1rem;
+}
+
+/* Tablets (≥768px) */
+@media (min-width: 768px) {
+  .container {
+    max-width: 720px;
+    padding: 2rem;
+  }
+}
+
+/* Desktops (≥1024px) */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+
+  h1 {
+    font-size: 3rem;
+  }
+
+  .tracking-map-banner {
+    padding: 2rem;
+    font-size: 1.25rem;
+  }
 }
