@@ -1,19 +1,30 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+// App.jsx  (This is the full code you provided)
+// NOTE: This file requires App.css and a .env.local file to run.
+
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api'; // <--- ADDED IMPORTS
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 
 import './App.css';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 // Get the Google Maps API Key from environment variables
-const MOCK_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY_HERE'; // <--- ADDED API KEY CONSTANT
+const MOCK_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_API_KEY_HERE';
+// <--- ADDED API KEY CONSTANT
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.error(
     "FATAL ERROR: Supabase environment variables are missing! " +
     "Please ensure you have a .env.local file in your project root " +
     "with VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY defined."
+  );
+}
+
+if (MOCK_MAPS_API_KEY === 'YOUR_API_KEY_HERE') {
+  console.warn(
+    "MAPS WARNING: VITE_GOOGLE_MAPS_API_KEY is not set in your .env.local file. " +
+    "The map will not load."
   );
 }
 
@@ -425,33 +436,62 @@ const Cart = ({ setPage, cart, setCart }) => {
   );
 };
 
+
 const Checkout = ({ setPage, cart, setCart, user }) => {
   
-  const [address, setAddress] = useState({ name: '', phone: '', street: '', payment: 'ShopeePay' });
+  // NEW: address now has hierarchical fields
+  const [address, setAddress] = useState({ 
+    name: '', phone: '', country: 'Philippines', region: 'Luzon', province: '', streetDetail: '', payment: 'ShopeePay' 
+  });
   const [loading, setLoading] = useState(false);
   
   const [error, setError] = useState('');
   
   const total = useMemo(() => cart.reduce((sum, item) => sum + item.price * item.quantity, 0), [cart]);
   
-  
+  // Country/Region/Province data (simple map)
+  const countryOptions = ['Philippines', 'America'];
+  const regionOptionsByCountry = {
+    'Philippines': ['Luzon', 'Visayas', 'Mindanao'],
+    'America': ['USA-Default'],
+  };
+  const provincesByRegion = {
+    'Luzon': ['Metro Manila', 'Cavite', 'Laguna'],
+    'Visayas': ['Cebu', 'Bohol', 'Iloilo'],
+    'Mindanao': ['Lanao del Norte', 'Zamboanga', 'Davao'],
+    'USA-Default': ['California', 'New York'],
+  };
+
+  // Build the combined shipping_address string used in order
+  const buildShippingAddress = () => {
+    const { country, region, province, streetDetail } = address;
+    const parts = [];
+    if (country) parts.push(country);
+    if (region) parts.push(region);
+    if (province) parts.push(province);
+    if (streetDetail) parts.push(streetDetail);
+    return parts.join(' • ');
+  };
+
   const handlePlaceOrder = async () => {
     
     if (!user) {
       setError('User not authenticated.');
       return;
     }
-    if (!address.name || !address.phone || !address.street) {
-      setError('Please fill in Recipient Name, Phone, and Full Address.');
+    if (!address.name || !address.phone || !address.province || !address.streetDetail) {
+      setError('Please fill in Recipient Name, Phone, Province and Full Address details.');
       return;
     }
     setLoading(true);
     
     try {
+      const shipping_address_combined = buildShippingAddress();
+
       const orderData = {
         user_id: user.id, 
         total: total,
-        shipping_address: address.street,
+        shipping_address: shipping_address_combined,
         contact_name: address.name,
         contact_phone: address.phone,
         payment_method: address.payment,
@@ -532,11 +572,57 @@ const Checkout = ({ setPage, cart, setCart, user }) => {
                   
                   required
               />
+
+              {/* NEW: Hierarchical dropdowns for Country -> Region -> Province */}
+              <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 mt-1'>
+                <div>
+                  <label className='text-xs font-semibold text-gray-600'>Country</label>
+                  <select
+                    value={address.country}
+                    onChange={(e) => {
+                      const newCountry = e.target.value;
+                      const newRegion = regionOptionsByCountry[newCountry]?.[0] || '';
+                      const newProvince = provincesByRegion[newRegion]?.[0] || '';
+                      setAddress({ ...address, country: newCountry, region: newRegion, province: newProvince });
+                    }}
+                    className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white font-semibold focus:ring-2 focus:ring-offset-0 input-focus-shopee"
+                  >
+                    {countryOptions.map(c => <option key={c} value={c}>{c}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className='text-xs font-semibold text-gray-600'>Region</label>
+                  <select
+                    value={address.region}
+                    onChange={(e) => {
+                      const newRegion = e.target.value;
+                      const newProvince = provincesByRegion[newRegion]?.[0] || '';
+                      setAddress({ ...address, region: newRegion, province: newProvince });
+                    }}
+                    className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white font-semibold focus:ring-2 focus:ring-offset-0 input-focus-shopee"
+                  >
+                    {(regionOptionsByCountry[address.country] || []).map(r => <option key={r} value={r}>{r}</option>)}
+                  </select>
+                </div>
+
+                <div>
+                  <label className='text-xs font-semibold text-gray-600'>Province / City</label>
+                  <select
+                    value={address.province}
+                    onChange={(e) => setAddress({ ...address, province: e.target.value })}
+                    className="w-full p-3 border border-gray-300 rounded-lg appearance-none bg-white font-semibold focus:ring-2 focus:ring-offset-0 input-focus-shopee"
+                  >
+                    <option value="">Choose province / city</option>
+                    {(provincesByRegion[address.region] || []).map(p => <option key={p} value={p}>{p}</option>)}
+                  </select>
+                </div>
+              </div>
+
               <StyledInput
-                  placeholder="Full Address (Street, City, Postal Code)"
-                  value={address.street}
-                  
-                  onChange={(e) => setAddress({ ...address, street: e.target.value })}
+                  placeholder="Street / Unit / Postal Code"
+                  value={address.streetDetail}
+                  onChange={(e) => setAddress({ ...address, streetDetail: e.target.value })}
                   rows="3"
                   isTextArea
                   
@@ -613,8 +699,7 @@ const Checkout = ({ setPage, cart, setCart, user }) => {
 
 // --- ORDER HISTORY AND TRACKING ---
 
-// FIX: Renamed OrderDetails to OrderTracking for clarity and consistency.
-// The component is modified here to include the enhanced MockMap logic.
+// Component for Order Tracking, including the animated map
 const OrderTracking = ({ order, setPage, user }) => {
   const [currentOrder, setCurrentOrder] = useState(order);
   
@@ -625,7 +710,7 @@ const OrderTracking = ({ order, setPage, user }) => {
   
   
   // --- Constants for Map ---
-  const MOCK_ORIGIN = "Cagayan de Oro, Philippines";
+  const MOCK_ORIGIN = "Cagayan de Oro, Philippines"; // Mock Seller Location
   const MOCK_DESTINATION = currentOrder.shipping_address; 
   
   // Default Map center for load
@@ -635,18 +720,45 @@ const OrderTracking = ({ order, setPage, user }) => {
   };
 
   // Coordinates are mock for demonstration since we only have string addresses
+  // Origin: Cagayan de Oro
   const center = useMemo(() => ({
     lat: 8.4735, 
     lng: 124.6415 
   }), []); 
   
-  const destinationCoords = useMemo(() => ({
-    lat: 8.2280, // Mock lat/lng for Iligan City/Shipping Address
-    lng: 124.2452 
-  }), []);
+  // small mapping of province/city to coordinates for demonstration
+  const provinceCoords = {
+    'Lanao del Norte': { lat: 8.2417, lng: 124.2460 },
+    'Zamboanga': { lat: 6.9214, lng: 122.0790 },
+    'Davao': { lat: 7.1907, lng: 125.4553 },
+    'Metro Manila': { lat: 14.5995, lng: 120.9842 },
+    'Cebu': { lat: 10.3157, lng: 123.8854 },
+    'Cavite': { lat: 14.4828, lng: 120.9937 },
+    'Laguna': { lat: 14.2117, lng: 121.3117 },
+    'Bohol': { lat: 9.8637, lng: 124.223 },
+    'Iloilo': { lat: 10.7202, lng: 122.5621 },
+    'California': { lat: 36.7783, lng: -119.4179 },
+    'New York': { lat: 40.7128, lng: -74.0060 },
+    // fallback
+    'default': { lat: 8.2280, lng: 124.2452 } // Near Lanao del Norte
+  };
+
+  // attempt to derive a province key from shipping_address
+  const destinationCoords = useMemo(() => {
+    const addressText = (currentOrder.shipping_address || '').toString();
+    let foundKey = 'default';
+    // Find the first key that is included in the address string
+    for (const k of Object.keys(provinceCoords)) {
+      if (k !== 'default' && addressText.includes(k)) {
+        foundKey = k;
+        break;
+      }
+    }
+    return provinceCoords[foundKey] || provinceCoords['default'];
+  }, [currentOrder.shipping_address, provinceCoords]);
 
   // LOADER HOOK: This loads the Google Maps script using the API key
-  const { isLoaded, loadError } = useJsApiLoader({ // <--- FIXED: uses useJsApiLoader
+  const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: MOCK_MAPS_API_KEY,
   });
 
@@ -726,6 +838,74 @@ const OrderTracking = ({ order, setPage, user }) => {
     // Determine the center for the map view
     const mapCenter = isShipped ? destinationCoords : center;
 
+    // CAR ANIMATION: interpolate between origin(center) and destination
+    const [carPos, setCarPos] = useState(center);
+    const animRef = useRef(null);
+    const progressRef = useRef(0); // 0..1
+
+    // create an SVG car icon as a data URL (simple)
+    const carSvg = encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+        <path fill="${encodeURIComponent(ORANGE)}" d="M37.6,18.1L37.6,18.1c-1.1-2.4-3.4-4-6.1-4H16.5c-2.7,0-5,1.7-6.1,4L6,30.8c-0.5,1.1-0.6,2.3-0.2,3.5
+          c0.4,1.2,1.2,2.1,2.3,2.6C8.8,37,9.4,37,10,37c1.7,0,3.3-1,4.1-2.6l2-3.8h15.9l2,3.8c0.8,1.6,2.4,2.6,4.1,2.6c0.6,0,1.2-0.1,1.7-0.2
+          c1.2-0.5,2-1.4,2.3-2.6c0.4-1.2,0.2-2.4-0.2-3.5L37.6,18.1z M17.4,20.8h13.2c0.7,0,1.3,0.6,1.3,1.3s-0.6,1.3-1.3,1.3H17.4
+          c-0.7,0-1.3-0.6-1.3-1.3S16.7,20.8,17.4,20.8z M12.8,30.3c-1.3,0-2.3-1-2.3-2.3s1-2.3,2.3-2.3s2.3,1,2.3,2.3S14.1,30.3,12.8,30.3z
+          M35.2,30.3c-1.3,0-2.3-1-2.3-2.3s1-2.3,2.3-2.3s2.3,1,2.3,2.3S36.5,30.3,35.2,30.3z"/>
+      </svg>
+    `);
+    const carIcon = {
+      url: `data:image/svg+xml;utf8,${carSvg}`,
+      scaledSize: { width: 48, height: 48 },
+      anchor: { x: 24, y: 24 },
+    };
+
+    // When status is Shipped, animate car from origin->destination
+    useEffect(() => {
+      // reset on status change
+      setCarPos(center);
+      progressRef.current = isShipped ? 0 : 0;
+      if (!isShipped) {
+        if (animRef.current) {
+          clearInterval(animRef.current);
+          animRef.current = null;
+        }
+        return;
+      }
+
+      // compute steps and start interval
+      const duration = 8000; // 8 seconds from origin to destination (demo)
+      const stepMs = 50;
+      const steps = Math.max(1, Math.floor(duration / stepMs));
+      let step = 0;
+
+      if (animRef.current) {
+        clearInterval(animRef.current);
+        animRef.current = null;
+      }
+
+      animRef.current = setInterval(() => {
+        step++;
+        const t = Math.min(1, step / steps); // 0..1
+        progressRef.current = t;
+        const lat = center.lat + (destinationCoords.lat - center.lat) * t;
+        const lng = center.lng + (destinationCoords.lng - center.lng) * t;
+        setCarPos({ lat, lng });
+
+        if (t >= 1) {
+          clearInterval(animRef.current);
+          animRef.current = null;
+        }
+      }, stepMs);
+
+      return () => {
+        if (animRef.current) {
+          clearInterval(animRef.current);
+          animRef.current = null;
+        }
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isShipped, destinationCoords.lat, destinationCoords.lng, center.lat, center.lng]);
+
 
     return (
         <div className="mt-4 p-4 border rounded-xl bg-white shadow-inner">
@@ -735,31 +915,46 @@ const OrderTracking = ({ order, setPage, user }) => {
                 <div className="rounded-t-lg overflow-hidden border-b-2" style={{borderColor: NAVY}}>
                     <GoogleMap
                         mapContainerStyle={containerStyle}
-                        center={mapCenter}
-                        zoom={isShipped ? 11 : 9}
+                        center={isShipped ? carPos : mapCenter}
+                        zoom={isShipped ? 7 : 6}
                         options={{
                             disableDefaultUI: true,
                             zoomControl: true,
                         }}
                     >
-                        {/* Origin Marker */}
+                        {/* Origin Marker (Warehouse) */}
                         <Marker 
-                            position={center} 
+                            position={center}
                             label={{
-                                text: 'A',
+                                text: 'Origin',
                                 className: 'map-label-origin',
                                 color: 'white'
                             }}
                         />
-                        {/* Destination Marker */}
+                        {/* Destination Marker (Home) */}
                         <Marker 
                             position={destinationCoords}
                             label={{
-                                text: 'B',
+                                text: 'Destination',
                                 className: 'map-label-destination',
                                 color: 'white'
                             }}
                         />
+
+                        {/* Car Marker (animated) — replace pin with car when in-transit */}
+                        {isShipped && (
+                          <Marker
+                            position={carPos}
+                            icon={carIcon}
+                          />
+                        )}
+
+                        {/* If not shipped, show static pin for package at origin */}
+                        {!isShipped && (
+                          <Marker
+                            position={center}
+                          />
+                        )}
                     </GoogleMap>
                 </div>
                 
@@ -1096,7 +1291,6 @@ const App = () => {
             return null;
             
         }
-        // FIXED: Using the new OrderTracking component
         return <OrderTracking order={selectedOrder} setPage={setPage} user={user} />;
         
       default:
@@ -1159,7 +1353,7 @@ const App = () => {
                 key={item.key}
                 onClick={() => setPage(item.key)}
                 className={`flex 
-                flex-col items-center p-2 pt-3 text-xs font-semibold w-full sm:w-1/3 transition-colors relative ${page === item.key ?
+                flex-col items-center p-2 pt-3 text-xs font-semibold w-full sm:w-3/4 transition-colors relative ${page === item.key ?
                 'text-opacity-100' : 'text-opacity-60'}`}
                 
                 style={{ color: ORANGE }}
@@ -1184,3 +1378,4 @@ const App = () => {
 };
     
 export default App;
+
