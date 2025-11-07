@@ -1,196 +1,218 @@
-@import "tailwindcss";
+  @import "tailwindcss";
 
-/* === Root Theme Colors === */
-:root {
-  --shopee-orange: #EE4D2D;
-  --shopee-light-bg: #F5F5F5;
-  --shopee-navy: #113366;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* === General Element Styles === */
-a {
-  font-weight: 500;
-  color: #eeeeee;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--shopee-light-bg);
-  color: var(--shopee-navy);
-  overflow-x: hidden;
-}
-
-h1 {
-  font-size: 2rem;
-  line-height: 1.2;
-}
-@media (min-width: 768px) {
-  h1 {
-    font-size: 3.2em;
+  /* === Root Theme Colors === */
+  :root {
+    --shopee-orange: #EE4D2D;
+    --shopee-light-bg: #F5F5F5;
+    --shopee-navy: #113366;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-}
 
-/* === Button Base === */
-.shopee-button-base {
-  transform: scale(1);
-  transition: transform 0.15s ease-in-out;
-}
-
-.shopee-button-base:hover:not(:disabled) {
-  transform: scale(1.01);
-}
-
-.shopee-button-primary {
-  background-color: var(--shopee-orange);
-  color: white;
-}
-
-.shopee-button-secondary {
-  background-color: white;
-  color: var(--shopee-navy);
-  border: 1px solid var(--shopee-orange);
-}
-
-.shopee-button-disabled {
-  transform: none !important;
-  background-color: var(--shopee-orange) !important;
-  color: white !important;
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* === Shopee Utility Colors === */
-.text-shopee-orange {
-  color: var(--shopee-orange);
-}
-.bg-shopee-light {
-  background-color: var(--shopee-light-bg);
-}
-.text-shopee-navy {
-  color: var(--shopee-navy);
-}
-
-/* === Responsive Container === */
-.h-screen.flex.flex-col.items-center.w-full {
-  width: 100%;
-  max-width: 1745px;
-  padding: 1rem;
-}
-
-/* === Tracking Map Banner === */
-.tracking-map-banner {
-  background-color: var(--shopee-navy);
-  width: 100%;
-  text-align: center;
-  color: white;
-  padding: 1rem;
-}
-
-.tracking-map-banner.shipped {
-  background-color: var(--shopee-orange);
-}
-
-/* === Form Inputs === */
-input.w-full,
-textarea.w-full,
-select.w-full {
-  color: black;
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 0.5rem;
-  transition: all 0.15s ease-in-out;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  ring: 2px var(--shopee-orange);
-  border-color: var(--shopee-orange);
-}
-
-textarea {
-  resize: none;
-}
-
-/* === Navigation Items === */
-.nav-item-active {
-  color: var(--shopee-orange);
-  opacity: 100%;
-}
-
-.nav-item-inactive {
-  color: var(--shopee-orange);
-  opacity: 50%;
-}
-
-/* === Buttons === */
-button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
+  /* === General Element Styles === */
+  a {
     font-weight: 500;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s, background-color 0.25s;
-    color: white;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-/* === Responsive Adjustments === */
-
-/* Mobile-first defaults */
-.container {
-  width: 100%;
-  padding: 1rem;
-}
-
-/* Tablets (≥768px) */
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-    padding: 2rem;
+    color: #eeeeee;
+    text-decoration: inherit;
   }
-}
+  a:hover {
+    color: #535bf2;
+  }
 
-/* Desktops (≥1024px) */
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1200px;
+  body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: var(--shopee-light-bg);
+    color: var(--shopee-navy);
+    overflow-x: hidden;
   }
 
   h1 {
-    font-size: 3rem;
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 3.2em;
+    }
   }
 
-  .tracking-map-banner {
-    padding: 2rem;
-    font-size: 1.25rem;
+  /* === Button Base === */
+  .shopee-button-base {
+    transform: scale(1);
+    transition: transform 0.15s ease-in-out;
   }
-}
+
+  .shopee-button-base:hover:not(:disabled) {
+    transform: scale(1.01);
+  }
+
+  .shopee-button-primary {
+    background-color: var(--shopee-orange);
+    color: white;
+  }
+
+  .shopee-button-secondary {
+    background-color: white;
+    color: var(--shopee-navy);
+    border: 1px solid var(--shopee-orange);
+  }
+
+  .shopee-button-disabled {
+    transform: none !important;
+    background-color: var(--shopee-orange) !important;
+    color: white !important;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* === Shopee Utility Colors === */
+  .text-shopee-orange {
+    color: var(--shopee-orange);
+  }
+  .bg-shopee-light {
+    background-color: var(--shopee-light-bg);
+  }
+  .text-shopee-navy {
+    color: var(--shopee-navy);
+  }
+
+  /* === Responsive Container === */
+  .h-screen.flex.flex-col.items-center.w-full {
+    width: 100%;
+    max-width: 1745px;
+    padding: 1rem;
+  }
+
+  /* === Tracking Map Banner === */
+  .tracking-map-banner {
+    background-color: var(--shopee-navy);
+    width: 100%;
+    text-align: center;
+    color: white;
+    padding: 1rem;
+  }
+
+  .tracking-map-banner.shipped {
+    background-color: var(--shopee-orange);
+  }
+
+  /* === Form Inputs === */
+  input.w-full,
+  textarea.w-full,
+  select.w-full {
+    color: black;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    ring: 2px var(--shopee-orange);
+    border-color: var(--shopee-orange);
+  }
+
+  textarea {
+    resize: none;
+  }
+
+  /* === Navigation Items === */
+  .nav-item-active {
+    color: var(--shopee-orange);
+    opacity: 100%;
+  }
+
+  .nav-item-inactive {
+    color: var(--shopee-orange);
+    opacity: 50%;
+  }
+  button.px-4.py-2.rounded-full.text-sm.font-bold.flex-shrink-0.transition-colors.flex.items-center.bg-white.text-gray-700 {
+      color: black;
+  }
+
+  button.px-4.py-2.rounded-full.text-sm.font-bold.flex-shrink-0.transition-colors.flex.items-center.bg-white.text-gray-700 {
+      color: black;
+      padding: 2px;
+  }
+  button.px-4.py-2.rounded-full.text-sm.font-bold.flex-shrink-0.transition-colors.bg-white.text-gray-700 {
+      color: black;
+  }
+  button.w-full.py-3.rounded-md.font-bold.text-base.transition-all.duration-300.shadow-lg.bg-white.text-gray-700.border.border-gray-300.hover\:bg-gray-100.shadow-md {
+      background-color: white;
+      border-bottom: 1px solid black;
+  }
+  button.w-7.h-7.flex.items-center.justify-center.text-lg.border.rounded-full.transition-colors {
+      width: 10px;
+  }
+  button.w-full.py-3.rounded-md.font-bold.text-base.transition-all.duration-300.shadow-lg.btn-primary {
+      width: 200px;
+  }
+
+
+  button {
+      border-radius: 8px;
+      border: 1px solid transparent;
+      padding: 0.6em 1.2em;
+      font-size: 1em;
+      font-weight: 500;
+      background-color: #1a1a1a;
+      cursor: pointer;
+      transition: border-color 0.25s, background-color 0.25s;
+      color: white;
+      width: 144px;
+  }
+  button:hover {
+    border-color: #646cff;
+  }
+  button:focus,
+  button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+
+  /* === Responsive Adjustments === */
+
+  /* Mobile-first defaults */
+  .container {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  /* Tablets (≥768px) */
+  @media (min-width: 768px) {
+    .container {
+      max-width: 720px;
+      padding: 2rem;
+    }
+  }
+
+  /* Desktops (≥1024px) */
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1200px;
+    }
+
+    h1 {
+      font-size: 3rem;
+    }
+
+    .tracking-map-banner {
+      padding: 2rem;
+      font-size: 1.25rem;
+    }
+  }
